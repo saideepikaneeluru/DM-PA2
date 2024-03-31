@@ -1,4 +1,3 @@
-
 import time
 import warnings
 import numpy as np
@@ -42,16 +41,20 @@ def fit_hierarchical_cluster(data, linkage_type, n_clusters):
     return model.labels_
 
 def fit_modified(data, linkage_type):
+    # Standardize the data
     scaler = StandardScaler()
     data_std = scaler.fit_transform(data)
 
+    # Calculate the linkage matrix
     Z = linkage(data_std, method=linkage_type)
 
+    # Determine the cut-off distance to form two distinct clusters
+    # Using the maximum rate of change of the distance between successive cluster merges
     distances = Z[:, 2]
     max_distance_change = np.max(np.diff(distances))
     cut_off_distance = distances[np.argmax(np.diff(distances))] + max_distance_change / 2
 
-    
+    # Apply flat clustering to form clusters at the specified cut-off distance
     labels = fcluster(Z, cut_off_distance, criterion='distance')
     
     # Adjust labels to start from 0 and be continuous integers
