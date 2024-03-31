@@ -8,6 +8,7 @@ from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import StandardScaler
 from itertools import cycle, islice
 import scipy.io as io
+from scipy.spatial.distance import euclidean
 from scipy.cluster.hierarchy import dendrogram, linkage  #
 
 # import plotly.figure_factory as ff
@@ -27,8 +28,16 @@ Recall from lecture that agglomerative hierarchical clustering is a greedy itera
 # the question asked.
 
 
-def data_index_function():
-    return None
+def data_index_function(data, indices_I, indices_J):
+    min_distance = float('inf')  # Initialize with infinity
+    
+    for i in indices_I:
+        for j in indices_J:
+            distance = euclidean(data[i], data[j])
+            if distance < min_distance:
+                min_distance = distance
+    
+    return min_distance
 
 
 def compute():
@@ -37,47 +46,44 @@ def compute():
     """
     A.	Load the provided dataset “hierachal_toy_data.mat” using the scipy.io.loadmat function.
     """
+    toy_data = io.loadmat('/Users/saideepikaneeluru/Downloads/hierarchical_toy_data.mat')
+    
 
-    # return value of scipy.io.loadmat()
-    answers["3A: toy data"] = {}
+    answers["3A: toy data"] = toy_data
 
     """
     B.	Create a linkage matrix Z, and plot a dendrogram using the scipy.hierarchy.linkage and scipy.hierachy.dendrogram functions, with “single” linkage.
     """
-
-    # Answer: NDArray
-    answers["3B: linkage"] = np.zeros(1)
-
-    # Answer: the return value of the dendogram function, dicitonary
-    answers["3B: dendogram"] = {}
+    Z = linkage(toy_data['X'], method='single')
+    answers["3B: linkage"] = Z
+    dendro_dict = dendrogram(Z)
+    answers["3B: dendogram"] = dendro_dict
 
     """
     C.	Consider the merger of the cluster corresponding to points with index sets {I={8,2,13}} J={1,9}}. At what iteration (starting from 0) were these clusters merged? That is, what row does the merger of A correspond to in the linkage matrix Z? The rows count from 0. 
     """
+    
 
-    # Answer type: integer
-    answers["3C: iteration"] = -1
-
+    answers["3C: iteration"] = 4
     """
     D.	Write a function that takes the data and the two index sets {I,J} above, and returns the dissimilarity given by single link clustering using the Euclidian distance metric. The function should output the same value as the 3rd column of the row found in problem 2.C.
     """
-    # Answer type: a function defined above
+    
     answers["3D: function"] = data_index_function
-
     """
     E.	In the actual algorithm, deciding which clusters to merge should consider all of the available clusters at each iteration. List all the clusters as index sets, using a list of lists, 
     e.g., [{0,1,2},{3,4},{5},{6},…],  that were available when the two clusters in part 2.D were merged.
     """
+    
 
-    # List the clusters. the [{0,1,2}, {3,4}, {5}, {6}, ...] represents a list of lists.
-    answers["3E: clusters"] = [{0, 0}, {0, 0}]
-
+    answers["3E: clusters"] = [{4},{6,14},{8,2,13,1,9},{5},{11},{0},{10},{3},{7},{12}]
+    
     """
     F.	Single linked clustering is often criticized as producing clusters where “the rich get richer”, that is, where one cluster is continuously merging with all available points. Does your dendrogram illustrate this phenomenon?
     """
 
-    # Answer type: string. Insert your explanation as a string.
-    answers["3F: rich get richer"] = ""
+
+    answers["3F: rich get richer"] = "yes"
 
     return answers
 
