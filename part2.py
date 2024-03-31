@@ -1,4 +1,3 @@
-
 from pprint import pprint
 
 # import plotly.figure_factory as ff
@@ -41,7 +40,6 @@ In this task you will explore different methods to find a good value for k
 def fit_kmeans(data, n_clusters):
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     kmeans.fit(data)
-    # SSE is the sum of squared distances of samples to their closest cluster center
     distances = np.sqrt(np.sum((data - kmeans.cluster_centers_[kmeans.labels_])**2,axis=1))
     sse=np.sum(distances**2)
     return sse, kmeans.inertia_
@@ -74,22 +72,23 @@ def compute():
     """
     C.	Plot the SSE as a function of k for k=1,2,….,8, and choose the optimal k based on the elbow method.
     """
-    k_values = range(1, 9)
-
-    results = []
-    for k in k_values:
-        sse, _ = fit_kmeans(X, k)
-        results.append((k, sse))
-    dct_value = [[k, sse] for k, sse in results]
+    
+    sse_values = []
+    for k in range(1, 9):
+        sse, inertia = fit_kmeans(X, k)
+        sse_values.append([k, sse])
+        #inertia_values.append((k, inertia))
 
     
-    dct = answers["2C: SSE plot"] = dct_value
+    dct = answers["2C: SSE plot"] = sse_values
     """
     D.	Repeat part 2.C for inertia (note this is an attribute in the kmeans estimator called _inertia). Do the optimal k’s agree?
     """
-    k_inertia_values = [(k, fit_kmeans(X, k)) for k in range(1, 9)]
-
-    dct = answers["2D: inertia plot"] = k_inertia_values
+    inertia_values = []
+    for k in range(1, 9):
+        _, inertia = fit_kmeans(X, k)  # Extract only the inertia value from the function's return
+        inertia_values.append([k, inertia])
+    dct = answers["2D: inertia plot"] =inertia_values
     dct = answers["2D: do ks agree?"] = "no"
 
     return answers
