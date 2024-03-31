@@ -1,3 +1,4 @@
+
 import time
 import warnings
 import numpy as np
@@ -46,18 +47,31 @@ def compute():
     """
     A.	Load the provided dataset “hierachal_toy_data.mat” using the scipy.io.loadmat function.
     """
-    toy_data = io.loadmat('/Users/saideepikaneeluru/Downloads/hierarchical_toy_data.mat')
+    toy_data = io.loadmat('hierarchical_toy_data.mat')
     
 
+    # Assuming the data variable in mat is named 'X'
+    #X = mat_data['X']  # Feature data
+    #y = mat_data['y'] 
+    #print(mat_data.keys())
+
+    # return value of scipy.io.loadmat()
     answers["3A: toy data"] = toy_data
 
     """
     B.	Create a linkage matrix Z, and plot a dendrogram using the scipy.hierarchy.linkage and scipy.hierachy.dendrogram functions, with “single” linkage.
     """
     Z = linkage(toy_data['X'], method='single')
+    #fig=plt.figure(figsize=(20,10))
+    # Answer: NDArray
     answers["3B: linkage"] = Z
+    #print(answers["3B: linkage"])
+
+    # Answer: the return value of the dendogram function, dicitonary
     dendro_dict = dendrogram(Z)
+    ##plt.savefig('part3)ques_A.png')
     answers["3B: dendogram"] = dendro_dict
+    #print(answers["3B: dendogram"])
 
     """
     C.	Consider the merger of the cluster corresponding to points with index sets {I={8,2,13}} J={1,9}}. At what iteration (starting from 0) were these clusters merged? That is, what row does the merger of A correspond to in the linkage matrix Z? The rows count from 0. 
@@ -65,17 +79,21 @@ def compute():
     
 
     answers["3C: iteration"] = 4
+    #print(i)
     """
     D.	Write a function that takes the data and the two index sets {I,J} above, and returns the dissimilarity given by single link clustering using the Euclidian distance metric. The function should output the same value as the 3rd column of the row found in problem 2.C.
     """
+    # Answer type: a function defined above
     
     answers["3D: function"] = data_index_function
+    #print(data_index_function)
     """
     E.	In the actual algorithm, deciding which clusters to merge should consider all of the available clusters at each iteration. List all the clusters as index sets, using a list of lists, 
     e.g., [{0,1,2},{3,4},{5},{6},…],  that were available when the two clusters in part 2.D were merged.
     """
     
 
+    # List the clusters. the [{0,1,2}, {3,4}, {5}, {6}, ...] represents a list of lists.
     answers["3E: clusters"] = [{4},{6,14},{8,2,13,1,9},{5},{11},{0},{10},{3},{7},{12}]
     
     """
@@ -83,6 +101,7 @@ def compute():
     """
 
 
+    # Answer type: string. Insert your explanation as a string.
     answers["3F: rich get richer"] = "yes"
 
     return answers
